@@ -204,19 +204,6 @@
             <!-- Dynamic Steps will be injected here -->
         </div>
 
-        <!-- Navigation Controls -->
-        <div id="nav-controls"
-            class="p-6 bg-mc-black border-t border-mc-green-dark relative z-20 flex justify-between gap-4">
-            <button id="prev-btn"
-                class="flex-1 px-4 py-3 bg-gray-800 text-gray-300 font-bold rounded border border-gray-600 hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
-                VOLTAR
-            </button>
-            <button id="next-btn"
-                class="flex-1 px-4 py-3 bg-mc-green text-white font-bold rounded border border-mc-gold hover:bg-mc-green-dark shadow-lg shadow-mc-green/20 transition">
-                PRÓXIMO
-            </button>
-        </div>
-
     </main>
 
     <!-- Result Modal / Screen -->
@@ -346,15 +333,8 @@
             const formContainer = document.getElementById('form-container');
             const progressBar = document.getElementById('progress-bar');
             const stepIndicator = document.getElementById('step-indicator');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
+            // Nav buttons are now dynamic
             const resultScreen = document.getElementById('result-screen');
-            const finalOutput = document.getElementById('final-output');
-            const copyBtn = document.getElementById('copy-btn');
-            const copyFeedback = document.getElementById('copy-feedback');
-            const restartBtnTop = document.getElementById('restart-btn-top');
-            const restartBtnBottom = document.getElementById('restart-btn-bottom');
-            const navControls = document.getElementById('nav-controls');
 
             // --- Initialization ---
             // Set default date to now (YYYY-MM-DDTHH:MM)
@@ -372,204 +352,220 @@
                 }, 500);
             });
 
-            nextBtn.addEventListener('click', handleNext);
-            prevBtn.addEventListener('click', handlePrev);
+        });
 
-            // Allow Enter key to simple inputs to trigger next
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey && !appContainer.classList.contains('hidden') && resultScreen.classList.contains('hidden')) {
-                    // Only if not textarea
-                    const currentInput = document.querySelector('input:focus');
-                    if (currentInput) handleNext();
-                }
-            });
+        // nextBtn and prevBtn listeners removed (dynamic now)
 
-            copyBtn.addEventListener('click', copyToClipboard);
-            [restartBtnTop, restartBtnBottom].forEach(btn => btn.addEventListener('click', resetForm));
-
-
-            // --- Core Functions ---
-
-            function updateProgress() {
-                const percent = Math.round(((currentStepIndex) / steps.length) * 100);
-                progressBar.style.width = `${percent}%`;
-                stepIndicator.innerText = `${percent}%`;
+        // Allow Enter key to simple inputs to trigger next
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey && !appContainer.classList.contains('hidden') && resultScreen.classList.contains('hidden')) {
+                // Only if not textarea
+                const currentInput = document.querySelector('input:focus');
+                if (currentInput) handleNext();
             }
+        });
 
-            function renderStep(index, direction = 'forward') {
-                // Clear container
-                formContainer.innerHTML = '';
+        copyBtn.addEventListener('click', copyToClipboard);
+        [restartBtnTop, restartBtnBottom].forEach(btn => btn.addEventListener('click', resetForm));
 
-                const step = steps[index];
-                const prevData = formData[step.id] || '';
 
-                // Create elements
-                const wrapper = document.createElement('div');
-                wrapper.className = direction === 'forward' ? 'slide-in-right' : 'slide-in-left'; // Animation class
+        // --- Core Functions ---
 
-                const label = document.createElement('label');
-                label.className = 'block text-mc-gold text-2xl font-military mb-4';
-                label.innerHTML = `${step.emoji} ${step.label}`;
+        function updateProgress() {
+            const percent = Math.round(((currentStepIndex) / steps.length) * 100);
+            progressBar.style.width = `${percent}%`;
+            stepIndicator.innerText = `${percent}%`;
+        }
 
-                let input;
+        function renderStep(index, direction = 'forward') {
+            // Clear container
+            formContainer.innerHTML = '';
 
-                if (step.type === 'date') {
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input cursor-pointer';
-                    input.placeholder = step.placeholder || "Selecione a data...";
-                    if (prevData) input.value = prevData;
+            const step = steps[index];
+            const prevData = formData[step.id] || '';
 
-                    setTimeout(() => {
-                        flatpickr(input, {
-                            dateFormat: "d/m/Y",
-                            defaultDate: prevData || new Date(),
-                            locale: "pt",
-                            theme: "dark",
-                            disableMobile: "true",
-                            onChange: function (selectedDates, dateStr, instance) {
-                                input.value = dateStr;
-                            }
-                        });
-                    }, 50);
+            // Create elements
+            const wrapper = document.createElement('div');
+            wrapper.className = direction === 'forward' ? 'slide-in-right' : 'slide-in-left'; // Animation class
 
-                } else if (step.type === 'time') {
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input cursor-pointer';
-                    input.placeholder = step.placeholder || "Selecione o horário...";
-                    if (prevData) input.value = prevData;
+            const label = document.createElement('label');
+            label.className = 'block text-mc-gold text-2xl font-military mb-4';
+            label.innerHTML = `${step.emoji} ${step.label}`;
 
-                    setTimeout(() => {
-                        flatpickr(input, {
-                            enableTime: true,
-                            noCalendar: true,
-                            dateFormat: "H:i",
-                            time_24hr: true,
-                            defaultDate: prevData || new Date(),
-                            locale: "pt",
-                            theme: "dark",
-                            disableMobile: "true",
-                            onChange: function (selectedDates, dateStr, instance) {
-                                input.value = dateStr;
-                            }
-                        });
-                    }, 50);
+            let input;
 
-                } else if (step.type === 'datetime-local') {
+            if (step.type === 'date') {
+                input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input cursor-pointer';
+                input.placeholder = step.placeholder || "Selecione a data...";
+                if (prevData) input.value = prevData;
 
-                } else if (step.type === 'select') {
-                    input = document.createElement('select');
-                    input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input';
-
-                    // Add default placeholder option
-                    const defaultOpt = document.createElement('option');
-                    defaultOpt.value = "";
-                    defaultOpt.text = "Selecione...";
-                    defaultOpt.disabled = true;
-                    defaultOpt.selected = !prevData;
-                    input.appendChild(defaultOpt);
-
-                    step.options.forEach(opt => {
-                        const option = document.createElement('option');
-                        option.value = opt;
-                        option.text = opt;
-                        if (opt === prevData) option.selected = true;
-                        input.appendChild(option);
+                setTimeout(() => {
+                    flatpickr(input, {
+                        dateFormat: "d/m/Y",
+                        defaultDate: prevData || new Date(),
+                        locale: "pt",
+                        theme: "dark",
+                        disableMobile: "true",
+                        onChange: function (selectedDates, dateStr, instance) {
+                            input.value = dateStr;
+                        }
                     });
+                }, 50);
 
-                } else if (step.type === 'textarea') {
-                    input = document.createElement('textarea');
-                    input.className = 'w-full p-4 h-32 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input resize-none';
-                    input.placeholder = step.placeholder;
-                    input.value = prevData;
+            } else if (step.type === 'time') {
+                input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input cursor-pointer';
+                input.placeholder = step.placeholder || "Selecione o horário...";
+                if (prevData) input.value = prevData;
 
-                } else {
-                    input = document.createElement('input');
-                    input.type = step.type;
-                    input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input';
-                    input.placeholder = step.placeholder;
-                    input.value = prevData;
+                setTimeout(() => {
+                    flatpickr(input, {
+                        enableTime: true,
+                        noCalendar: true,
+                        dateFormat: "H:i",
+                        time_24hr: true,
+                        defaultDate: prevData || new Date(),
+                        locale: "pt",
+                        theme: "dark",
+                        disableMobile: "true",
+                        onChange: function (selectedDates, dateStr, instance) {
+                            input.value = dateStr;
+                        }
+                    });
+                }, 50);
 
-                    if (step.id === 'date' && !prevData) {
-                        const d = new Date();
-                        input.value = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
-                    }
-                    if (step.id === 'time' && !prevData) {
-                        const d = new Date();
-                        input.value = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
-                    }
+            } else if (step.type === 'datetime-local') {
+
+            } else if (step.type === 'select') {
+                input = document.createElement('select');
+                input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input';
+
+                // Add default placeholder option
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = "";
+                defaultOpt.text = "Selecione...";
+                defaultOpt.disabled = true;
+                defaultOpt.selected = !prevData;
+                input.appendChild(defaultOpt);
+
+                step.options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.text = opt;
+                    if (opt === prevData) option.selected = true;
+                    input.appendChild(option);
+                });
+
+            } else if (step.type === 'textarea') {
+                input = document.createElement('textarea');
+                input.className = 'w-full p-4 h-32 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input resize-none';
+                input.placeholder = step.placeholder;
+                input.value = prevData;
+
+            } else {
+                input = document.createElement('input');
+                input.type = step.type;
+                input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input';
+                input.placeholder = step.placeholder;
+                input.value = prevData;
+
+                if (step.id === 'date' && !prevData) {
+                    const d = new Date();
+                    input.value = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
                 }
-
-                input.id = 'current-input';
-
-                // Validation helper
-                const errorMsg = document.createElement('div');
-                errorMsg.id = 'error-msg';
-                errorMsg.className = 'text-red-500 text-sm mt-2 opacity-0 transition-opacity font-bold';
-                errorMsg.innerText = 'Este campo é obrigatório.';
-
-                wrapper.appendChild(label);
-                wrapper.appendChild(input);
-                wrapper.appendChild(errorMsg);
-                formContainer.appendChild(wrapper);
-
-                // Focus input
-                setTimeout(() => input.focus(), 100);
-
-                // Update Buttons
-                prevBtn.disabled = index === 0;
-                nextBtn.innerHTML = index === steps.length - 1 ? 'FINALIZAR' : 'PRÓXIMO';
-
-                updateProgress();
-            }
-
-            function validateCurrentStep() {
-                const step = steps[currentStepIndex];
-                const input = document.getElementById('current-input');
-                const val = input.value.trim();
-                const errorMsg = document.getElementById('error-msg');
-
-                if (step.required && !val) {
-                    input.classList.add('border-red-500');
-                    errorMsg.classList.remove('opacity-0');
-                    // Shake animation
-                    input.classList.add('animate-pulse');
-                    setTimeout(() => input.classList.remove('animate-pulse'), 500);
-                    return false;
-                }
-
-                // Save data
-                formData[step.id] = val;
-                return true;
-            }
-
-            function handleNext() {
-                if (!validateCurrentStep()) return;
-
-                if (currentStepIndex < steps.length - 1) {
-                    currentStepIndex++;
-                    renderStep(currentStepIndex, 'forward');
-                } else {
-                    generateReport();
+                if (step.id === 'time' && !prevData) {
+                    const d = new Date();
+                    input.value = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
                 }
             }
 
-            function handlePrev() {
-                if (currentStepIndex > 0) {
-                    currentStepIndex--;
-                    renderStep(currentStepIndex, 'backward');
-                }
+            input.id = 'current-input';
+
+            // Validation helper
+            const errorMsg = document.createElement('div');
+            errorMsg.id = 'error-msg';
+            errorMsg.className = 'text-red-500 text-sm mt-2 opacity-0 transition-opacity font-bold';
+            errorMsg.innerText = 'Este campo é obrigatório.';
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(input);
+            wrapper.appendChild(errorMsg);
+            formContainer.appendChild(wrapper);
+
+            // Focus input
+            setTimeout(() => input.focus(), 100);
+
+            // --- Buttons Section (Dynamic) ---
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'mt-8 flex justify-between gap-4';
+
+            const btnPrev = document.createElement('button');
+            btnPrev.innerHTML = 'VOLTAR';
+            btnPrev.className = 'flex-1 px-4 py-3 bg-gray-800 text-gray-300 font-bold rounded border border-gray-600 hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed';
+            btnPrev.disabled = index === 0;
+            btnPrev.onclick = handlePrev;
+
+            const btnNext = document.createElement('button');
+            btnNext.innerHTML = index === steps.length - 1 ? 'FINALIZAR' : 'PRÓXIMO';
+            btnNext.className = 'flex-1 px-4 py-3 bg-mc-green text-white font-bold rounded border border-mc-gold hover:bg-mc-green-dark shadow-lg shadow-mc-green/20 transition';
+            btnNext.onclick = handleNext;
+
+            btnContainer.appendChild(btnPrev);
+            btnContainer.appendChild(btnNext);
+            wrapper.appendChild(btnContainer);
+
+            updateProgress();
+        }
+
+        function validateCurrentStep() {
+            const step = steps[currentStepIndex];
+            const input = document.getElementById('current-input');
+            const val = input.value.trim();
+            const errorMsg = document.getElementById('error-msg');
+
+            if (step.required && !val) {
+                input.classList.add('border-red-500');
+                errorMsg.classList.remove('opacity-0');
+                // Shake animation
+                input.classList.add('animate-pulse');
+                setTimeout(() => input.classList.remove('animate-pulse'), 500);
+                return false;
             }
 
-            function generateReport() {
-                // Flatpickr gives us "DD/MM/YYYY HH:MM" directly if we configured dateFormat: "d/m/Y H:i"
-                // But we want "DD/MM/YYYY às HH:mm"
+            // Save data
+            formData[step.id] = val;
+            return true;
+        }
 
-                // Combine Date and Time
-                let formattedDate = `${formData.date} às ${formData.time}`;
+        function handleNext() {
+            if (!validateCurrentStep()) return;
 
-                const report = `
+            if (currentStepIndex < steps.length - 1) {
+                currentStepIndex++;
+                renderStep(currentStepIndex, 'forward');
+            } else {
+                generateReport();
+            }
+        }
+
+        function handlePrev() {
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                renderStep(currentStepIndex, 'backward');
+            }
+        }
+
+        function generateReport() {
+            // Flatpickr gives us "DD/MM/YYYY HH:MM" directly if we configured dateFormat: "d/m/Y H:i"
+            // But we want "DD/MM/YYYY às HH:mm"
+
+            // Combine Date and Time
+            let formattedDate = `${formData.date} às ${formData.time}`;
+
+            const report = `
 💀 Relatório Sgt de armas 💀
 
 Data : ${formattedDate}
@@ -593,73 +589,73 @@ Conferido e assinado CMD ARMAS :
 ${formData.cmd_armas}
 `;
 
-                finalOutput.value = report.trim();
+            finalOutput.value = report.trim();
 
-                // Show result screen
-                appContainer.classList.add('hidden');
-                resultScreen.classList.remove('hidden');
+            // Show result screen
+            appContainer.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+        }
+
+        function copyToClipboard() {
+            finalOutput.select();
+            finalOutput.setSelectionRange(0, 99999); // Mobile
+
+            // Try the modern API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(finalOutput.value)
+                    .then(showCopyFeedback)
+                    .catch(err => {
+                        console.error('Clipboard API failed', err);
+                        fallbackCopy();
+                    });
+            } else {
+                fallbackCopy();
             }
+        }
 
-            function copyToClipboard() {
-                finalOutput.select();
-                finalOutput.setSelectionRange(0, 99999); // Mobile
-
-                // Try the modern API first
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(finalOutput.value)
-                        .then(showCopyFeedback)
-                        .catch(err => {
-                            console.error('Clipboard API failed', err);
-                            fallbackCopy();
-                        });
-                } else {
-                    fallbackCopy();
-                }
+        function fallbackCopy() {
+            try {
+                document.execCommand('copy');
+                showCopyFeedback();
+            } catch (err) {
+                console.error('Fallback copy failed', err);
+                alert('Não foi possível copiar automaticamente. Por favor, copie manualmente.');
             }
+        }
 
-            function fallbackCopy() {
-                try {
-                    document.execCommand('copy');
-                    showCopyFeedback();
-                } catch (err) {
-                    console.error('Fallback copy failed', err);
-                    alert('Não foi possível copiar automaticamente. Por favor, copie manualmente.');
-                }
-            }
+        function showCopyFeedback() {
+            copyFeedback.classList.remove('opacity-0');
+            copyBtn.classList.remove('bg-mc-gold');
+            copyBtn.classList.add('bg-green-500');
+            copyBtn.innerHTML = 'COPIADO!';
 
-            function showCopyFeedback() {
-                copyFeedback.classList.remove('opacity-0');
-                copyBtn.classList.remove('bg-mc-gold');
-                copyBtn.classList.add('bg-green-500');
-                copyBtn.innerHTML = 'COPIADO!';
-
-                setTimeout(() => {
-                    copyFeedback.classList.add('opacity-0');
-                    copyBtn.classList.add('bg-mc-gold');
-                    copyBtn.classList.remove('bg-green-500');
-                    copyBtn.innerHTML = `
+            setTimeout(() => {
+                copyFeedback.classList.add('opacity-0');
+                copyBtn.classList.add('bg-mc-gold');
+                copyBtn.classList.remove('bg-green-500');
+                copyBtn.innerHTML = `
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                 </svg> COPIAR RELATÓRIO
             `;
-                }, 3000);
-            }
+            }, 3000);
+        }
 
-            function resetForm() {
-                // Clear data
-                for (const key in formData) delete formData[key];
-                currentStepIndex = 0;
+        function resetForm() {
+            // Clear data
+            for (const key in formData) delete formData[key];
+            currentStepIndex = 0;
 
-                // UI Reset
-                resultScreen.classList.add('hidden');
-                appContainer.classList.add('hidden');
-                splashScreen.style.display = 'flex';
-                splashScreen.classList.remove('fade-out');
+            // UI Reset
+            resultScreen.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            splashScreen.style.display = 'flex';
+            splashScreen.classList.remove('fade-out');
 
-                // Reset progress
-                progressBar.style.width = '0%';
-                stepIndicator.innerText = '0%';
-            }
+            // Reset progress
+            progressBar.style.width = '0%';
+            stepIndicator.innerText = '0%';
+        }
         });
 
     </script>
