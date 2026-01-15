@@ -14,4 +14,4 @@ Site temporário contendo o formulário de relatório.
 ## Estrutura
 
 - `index.html`: Arquivo principal do site.
-- `assets/`: Arquivos auxiliares (base64 strings, etc).
+
