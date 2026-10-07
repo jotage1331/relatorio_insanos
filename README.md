@@ -13,5 +13,7 @@ Site temporário contendo o formulário de relatório.
 
 ## Estrutura
 
-- `index.html`: Arquivo principal do site.
-
+- `index.html`: Formulário de Relatório SGT de Armas (Ocorrências).
+- `viagem.html`: Formulário de Ficha de Comunicação de Viagem.
+- `novo_relatorio.md`: Especificação dos campos da Ficha de Comunicação de Viagem.
+- `start_server.sh`: Script para iniciar o servidor local na porta 8000.

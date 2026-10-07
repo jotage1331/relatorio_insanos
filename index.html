@@ -171,14 +171,14 @@
             </h1>
             <p class="text-mc-orange tracking-widest text-lg font-bold">INSANOS MC</p>
 
-            <button id="start-btn"
-                class="mt-8 px-8 py-3 bg-mc-green hover:bg-mc-green-dark text-white font-bold text-xl rounded border-2 border-mc-gold shadow-[0_0_15px_rgba(75,83,32,0.6)] uppercase tracking-wide transition-all transform active:scale-95">
-                Relatório SGT de Armas
-            </button>
-            <div>
+            <div class="flex flex-col gap-4 items-center mt-8 w-full max-w-sm mx-auto">
                 <button id="start-btn"
-                    class="mt-8 px-8 py-3 bg-mc-green hover:bg-mc-green-dark text-white font-bold text-xl rounded border-2 border-mc-gold shadow-[0_0_15px_rgba(75,83,32,0.6)] uppercase tracking-wide transition-all transform active:scale-95">
-                    Protocolo de Viagem
+                    class="w-full py-3.5 px-6 bg-mc-green hover:bg-mc-green-dark text-white font-bold text-lg rounded border-2 border-mc-gold shadow-[0_0_15px_rgba(75,83,32,0.6)] uppercase tracking-wide transition-all transform active:scale-95 text-center flex items-center justify-center cursor-pointer">
+                    Relatório SGT de Armas
+                </button>
+                <button onclick="window.location.href='viagem.html'"
+                    class="w-full py-3.5 px-6 bg-mc-green hover:bg-mc-green-dark text-white font-bold text-lg rounded border-2 border-mc-gold shadow-[0_0_15px_rgba(75,83,32,0.6)] uppercase tracking-wide transition-all transform active:scale-95 text-center flex items-center justify-center cursor-pointer">
+                    Ficha de Protocolo de Viagem
                 </button>
             </div>
         </div>
@@ -410,7 +410,12 @@
                     input.type = 'text';
                     input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input cursor-pointer';
                     input.placeholder = step.placeholder || "Selecione a data...";
-                    if (prevData) input.value = prevData;
+                    if (prevData) {
+                        input.value = prevData;
+                    } else {
+                        const d = new Date();
+                        input.value = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+                    }
 
                     setTimeout(() => {
                         flatpickr(input, {
@@ -430,7 +435,12 @@
                     input.type = 'text';
                     input.className = 'w-full p-4 text-lg rounded bg-black border-2 border-mc-green text-gray-200 focus:border-mc-orange focus:outline-none transition-colors rustic-input cursor-pointer';
                     input.placeholder = step.placeholder || "Selecione o horário...";
-                    if (prevData) input.value = prevData;
+                    if (prevData) {
+                        input.value = prevData;
+                    } else {
+                        const d = new Date();
+                        input.value = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+                    }
 
                     setTimeout(() => {
                         flatpickr(input, {
@@ -527,6 +537,19 @@
                 btnContainer.appendChild(btnPrev);
                 btnContainer.appendChild(btnNext);
                 wrapper.appendChild(btnContainer);
+
+                // --- Menu Button (Below Voltar / Próximo) ---
+                const menuContainer = document.createElement('div');
+                menuContainer.className = 'mt-5 text-center';
+
+                const btnMenu = document.createElement('button');
+                btnMenu.type = 'button';
+                btnMenu.innerHTML = '← MENU';
+                btnMenu.className = 'px-6 py-2 bg-black/60 hover:bg-black text-mc-orange hover:text-white text-xs font-bold rounded border border-mc-orange/60 hover:border-mc-orange transition tracking-widest uppercase cursor-pointer';
+                btnMenu.onclick = resetForm;
+
+                menuContainer.appendChild(btnMenu);
+                wrapper.appendChild(menuContainer);
 
                 updateProgress();
             }

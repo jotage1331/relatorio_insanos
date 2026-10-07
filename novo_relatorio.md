@@ -1,39 +1,39 @@
 FICHA DE COMUNICAÇÃO DE VIAGEM
 
-NOME DE COLETE: __________________________________________
+NOME DE COLETE: 
 
-DIVISÃO: _________________________________________________
+DIVISÃO: Ex: Leste
 
-REGIONAL: ________________________________________________
+REGIONAL: Ex: Jundiaí - I 
 
-TEL. EMERGÊNCIA: _________________________________________
+TEL. EMERGÊNCIA: Ex(11) 99999-9999
 
-NOME DO CONTATO: _________________________________________
+NOME DO CONTATO: Ex: Júlia
 
-CIDADE DE ORIGEM: ________________________________________
+CIDADE DE ORIGEM: Ex: Jundiaí-SP
 
-CIDADE DE DESTINO: _______________________________________
+CIDADE DE DESTINO: Ex: Florianópolis-SC
 
-1ª CIDADE DE PARADA: _____________________________________
+1ª CIDADE DE PARADA: Ex: Curitiba-PR
 
-2ª CIDADE DE PARADA: _____________________________________
+2ª CIDADE DE PARADA: Joinville-SC
 
 TRAJETO COMPLETO / ROTA PREVISTA:
 
-DATA DE SAÍDA: ___________________________________________
 
-HORÁRIO: _________________________________________________
+DATA DE SAÍDA: 
 
-PREVISÃO DE RETORNO: ____________________________________
+
+PREVISÃO DE RETORNO: 
 
 ESTÁ VIAJANDO DE:
 
-( ) MOTO  ( ) CARRO  ( ) OUTROS: __________________
+( ) MOTO  ( ) CARRO  ( ) OUTROS: Ex: Avião
 
-ACOMPANHADO: _____________________________________________
+ACOMPANHADO: Ex: Com a esposa
 
 COM AS CORES:
 
 ( ) SIM  ( ) NÃO
 
-AVISAREI QUANDO CHEGAR EM: _______________________________
+AVISAREI QUANDO CHEGAR EM: Ex:Destino ou Parada
